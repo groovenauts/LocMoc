@@ -8,7 +8,7 @@ import { fn } from './util/function';
  * @const
  * @type {string}
  */
-export const $GOOGLE_CLIENT_ID = "424906329885-uh8ji8vt9hh20ieblevnbaae215ro8dj.apps.googleusercontent.com";
+export const $GOOGLE_CLIENT_ID = "ここにクライアントIDを埋め込む";
 
 /**
  * Scope for API
@@ -24,19 +24,31 @@ export const $GOOGLE_SCOPE = 'https://www.googleapis.com/auth/bigquery.readonly'
  */
 export const $GOOGLE_PROJECT_ID = "blocks-next-2017";
 
+
 /**
  * Google の OAuth 認証を行う。
  * @param {function} callback - コールバック
  */
-export function oauth(callback) {
-  global.gapi.auth.authorize({
-    client_id: $GOOGLE_CLIENT_ID,
-    scope: $GOOGLE_SCOPE,
-  }, (auth) => {
+export function oauthInit(callback) {
+  global.gapi.load('client:auth2', () => {
     global.gapi.client.load('bigquery', 'v2', () => {
-      fn(callback)(auth);
-    });
-  })
+      global.gapi.client.init({
+        client_id: $GOOGLE_CLIENT_ID,
+        scope: $GOOGLE_SCOPE,
+      }).then(() => {
+        gapi.auth2.getAuthInstance().isSignedIn.listen(fn(callback));
+        if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+          fn(callback)(true);
+        } else {
+          fn(callback)(false);
+        }
+      })
+    })
+  });
+}
+
+export function oauth(callback) {
+  gapi.auth2.getAuthInstance().signIn();
 }
 
 /**

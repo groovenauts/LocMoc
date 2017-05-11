@@ -3,7 +3,12 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { runQuery, $BQ_TEST_QUERY } from './core/bigquery';
+import { runQuery } from './core/bigquery';
+import TimeWindow from './TimeWindow';
+import {
+  $BQ_TEST_QUERY,
+  $BQ_SRC_MAC_ADDRESS_LIST_QUERY,
+} from './core/queries';
 
 export default class BigQuery extends React.Component {
   static propTypes = {
@@ -19,11 +24,12 @@ export default class BigQuery extends React.Component {
   }
 
   runQuery() {
-    runQuery($BQ_TEST_QUERY, (success, data) => {
-      if (success) {
-        this.setState({ data });
-      }
-    });
+    runQuery($BQ_TEST_QUERY)
+      .then(([success, data]) => {
+        if (success) {
+          this.setState({ data });
+        }
+      })
   }
 
   renderData(data) {
@@ -58,19 +64,25 @@ export default class BigQuery extends React.Component {
     );
   }
 
+  renderMacAddressList(macAddresses) {
+
+  }
+
   render() {
     const { authorized, ...props } = this.props;
     if (!authorized) return null;
 
-    const { data } = this.state;
+    const { data, macAddresses } = this.state;
 
     return (
       <div>
         <h2>BigQuery</h2>
+        <TimeWindow />
         <div>
           <button onClick={ this.runQuery.bind(this) }>run query</button>
         </div>
         { this.renderData(data) }
+        { this.renderMacAddressList(macAddresses) }
       </div>
     );
   }

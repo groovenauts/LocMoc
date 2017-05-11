@@ -6,9 +6,13 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import BigQuery from './BigQuery';
-import { oauth } from './core/google';
+import { white } from 'material-ui/styles/colors';
+import { fn } from './core/util/function';
+import { oauthInit, oauth } from './core/google';
 import { googeOAuthAction } from './core/google.action';
+import TimeWindow from './TimeWindow';
+import DataCountGraph from './DataCountGraph';
+
 
 export function stateConnector(state) {
   return {
@@ -34,6 +38,12 @@ export class Top extends React.Component {
     this.state = {}
   }
 
+  componentWillMount() {
+    oauthInit((authorized) => {
+      this.props.dispatchAuth(authorized);
+    })
+  }
+
   componentDidMount() {
   }
 
@@ -47,22 +57,35 @@ export class Top extends React.Component {
     }
   }
 
-
   render() {
     const {
       authorized,
       ...props
     } = this.props;
 
-    return (
-      <div className={ classnames('content') }>
-        <h1>Data Viewer</h1>
-        <div>
-          <button onClick={ this.onAuth.bind(this) }>Auth</button>
+    if (authorized) {
+      return (
+        <div className={ classnames('content') }>
+          <h1>Data Viewer</h1>
+          <TimeWindow />
+          <DataCountGraph />
         </div>
-        <BigQuery authorized={ authorized } />
-      </div>
-    );
+      );
+    } else {
+      logger.debug(global.gapi.auth);
+      return (
+        <div className={ classnames('content') }>
+          <h1>Data Viewer</h1>
+          <div>
+            <RaisedButton
+               primary={ true }
+               onClick={ this.onAuth.bind(this) }>
+              <span style={{ color: white }}>Auth</span>
+            </RaisedButton>
+          </div>
+        </div>
+      );
+    }
   }
 }
 

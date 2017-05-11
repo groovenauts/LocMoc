@@ -8,8 +8,6 @@ import {
 
 const initState = {
   authorized: false,
-  auth: null,
-  accessToken: "",
 };
 
 
@@ -19,13 +17,12 @@ const initState = {
  * @param {object} action - Action object
  * @param {string} action.type - Action type
  * @param {object} action.payload - Action payload
- * @param {object} action.payload.auth - Google の認証情報
+ * @param {boolean} action.payload.auth - Google の認証情報
  * @return {object} New State
  */
 export function oauth(state, action) {
   const { auth } = action.payload;
-  const { access_token } = auth || {};
-  return { ...state, authorized: !_.isEmpty(auth), auth: auth, accessToken: access_token };
+  return { ...state, authorized: auth };
 }
 
 
