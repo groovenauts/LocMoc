@@ -9,6 +9,25 @@ $ git clone git://github.com/groovenauts/LocMoc.git
 $ cd LocMoc/client
 ```
 
+Setup Google Client ID
+
+Open `./src/core/google/js`
+
+```
+diff --git a/client/src/core/google.js b/client/src/core/google.js
+index 7e59ee6..8186a27 100644
+--- a/client/src/core/google.js
++++ b/client/src/core/google.js
+@@ -8,7 +8,7 @@ import { fn } from './util/function';
+  * @const
+  * @type {string}
+  */
+-export const $GOOGLE_CLIENT_ID = "ここにクライアントIDを埋め込む";
++export const $GOOGLE_CLIENT_ID = "000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com";
+
+ /**
+  * Scope for API```
+
 Setup server.
 
 ```
