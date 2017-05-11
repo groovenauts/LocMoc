@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import strftime from 'strftime';
 // import { Chart } from 'react-google-charts';
 import C3Chart from 'react-c3js';
+import c3 from 'c3';
 import 'c3/c3.css'
 import { fn } from './core/util/function';
 import { reshapeDataRequestCount } from './core/data';
@@ -44,11 +45,34 @@ export class DataCountGraph extends React.Component {
     super(props);
 
     this.state = {
+      columns: [['x']],
+      groups: [],
+    };
+
+    this.c3 = null;
+  }
+
+  componentWillMount() {
+    this.handleLoadRequestCount({ start: this.props.startTime, end: this.props.endTime });
+  }
+
+  componentDidMount() {
+    this.genC3();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.startTime !== this.props.startTime
+        || nextProps.endTime !== this.props.endTime) {
+      this.handleLoadRequestCount({ start: nextProps.startTime, end: nextProps.endTime });
+    }
+  }
+
+  genC3() {
+    this.c3 = c3.generate({
+      bindto: "#requestCountBarChart",
       data: {
         x: 'x',
-        columns: [
-          ['x'],
-        ],
+        columns: this.state.columns,
         type: "bar",
       },
       axis: {
@@ -60,18 +84,7 @@ export class DataCountGraph extends React.Component {
           }
         }
       },
-    };
-  }
-
-  componentWillMount() {
-    this.handleLoadRequestCount({ start: this.props.startTime, end: this.props.endTime });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.startTime !== this.props.startTime
-        || nextProps.endTime !== this.props.endTime) {
-      this.handleLoadRequestCount({ start: nextProps.startTime, end: nextProps.endTime });
-    }
+    });
   }
 
   handleLoadRequestCount(win) {
@@ -82,25 +95,21 @@ export class DataCountGraph extends React.Component {
   handleLoadedRequestCount(success, data) {
     if (success) {
       const { startTime: start, endTime: end, data } = this.props;
-      const { columns, groups } = reshapeDataRequestCount(data, start, end);
-      let graphData = {
-        x: 'x',
-        columns: columns,
-        type: "bar",
-        groups: groups,
-      };
-      logger.debug(graphData)
-      this.setState({ data: graphData });
+      let { columns, groups } = reshapeDataRequestCount(data, start, end);
+      if (!this.c3) {
+        this.genC3();
+      }
+
+      this.c3.load({ columns: columns });
+      this.c3.groups(groups);
+      this.setState({ columns: columns, groups: groups });
     }
   }
 
   render() {
     return (
       <section>
-        <C3Chart
-           size={{ height: 480 }}
-           axis={ this.state.axis }
-           data={ this.state.data } />
+        <div id="requestCountBarChart"></div>
       </section>
     )
   }
