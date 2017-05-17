@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import logger from 'js-logger';
 
 export const $TIME_WIDTH = 60 * 10; // seconds
 
@@ -6,13 +7,20 @@ export const $TIME_WIDTH = 60 * 10; // seconds
 /**
  * データを整形する
  */
-export function reshapeDataRequestCount(data, start, end) {
+export function reshapeDataRequestCount(data, start, end, type) {
   const { schema, rows } = data;
-  let raspi_macs = [];
+  let macAddresses = [];
+  let valueKey = (() => {
+    switch (type) {
+    case 'src': return 'src_mac';
+    default: return 'raspi_mac';
+    }
+  })();
   const datamap = _.reduce(rows, (acc, row) => {
-    if (_.indexOf(raspi_macs, row.raspi_mac) < 0) raspi_macs.push(row.raspi_mac);
-    acc[row.raspi_mac] = (_.isPlainObject(acc[row.raspi_mac])) ? acc[row.raspi_mac] : {};
-    acc[row.raspi_mac][row.timestamp.toString()] = row.cnt;
+    let mac = row[valueKey];
+    if (_.indexOf(macAddresses, mac) < 0) macAddresses.push(mac);
+    acc[mac] = (_.isPlainObject(acc[mac])) ? acc[mac] : {};
+    acc[mac][row.timestamp.toString()] = row.cnt;
     return acc;
   }, {});
 
@@ -20,7 +28,9 @@ export function reshapeDataRequestCount(data, start, end) {
   let columns = [];
   columns[0] = genTimestampsColumn(timestamps);
 
-  _.each(raspi_macs, (mac, i) => {
+  logger.info(macAddresses);
+
+  _.each(macAddresses, (mac, i) => {
     let cols = [mac];
     _.each(timestamps, (ts, j) => {
       let nextTs = timestamps[j + 1] || end;
@@ -33,7 +43,7 @@ export function reshapeDataRequestCount(data, start, end) {
     columns.push(cols);
   });
 
-  let groups = [ raspi_macs ];
+  let groups = [ macAddresses ];
   return { columns, groups };
 }
 

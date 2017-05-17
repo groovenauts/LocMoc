@@ -3,7 +3,8 @@ import _ from 'lodash';
 import logger from 'js-logger';
 import { fn } from './util/function';
 import {
-  BQ_UPDATE_TIME_WINDOW_ACTION
+  BQ_UPDATE_TIME_WINDOW_ACTION,
+  BQ_UPDATE_SOURCE_TYPE_ACTION,
 } from './bq.action';
 import { $TIME_WIDTH } from './data';
 
@@ -12,6 +13,7 @@ let currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now
 let timestamp = Math.floor(currentDate.getTime() / 1000);
 
 const initState = {
+  type: "raspi",
   timeWindow: {
     start: Math.floor(currentDate.getTime() / 1000),
     end: Math.floor((currentDate.getTime() / 1000) + $TIME_WIDTH),
@@ -38,8 +40,14 @@ export function updateTimeWindow(state, action) {
   return { ...state, timeWindow: newTimeWIndow }
 }
 
+export function updateSourceType(state, action) {
+  const { type } = action.payload;
+  return { ...state, type: type };
+}
+
 const handlers = handleActions({
   [BQ_UPDATE_TIME_WINDOW_ACTION]: updateTimeWindow,
+  [BQ_UPDATE_SOURCE_TYPE_ACTION]: updateSourceType,
 }, initState);
 
 export default handlers;

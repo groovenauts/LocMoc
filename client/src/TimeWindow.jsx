@@ -7,14 +7,21 @@ import classnames from 'classnames';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import RaisedButton from 'material-ui/RaisedButton';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import { fn } from './core/util/function';
-import { bqUpdateTimeWindowAction } from './core/bq.action';
+import {
+  bqLoadSrcMacAddressesAction,
+  bqUpdateTimeWindowAction,
+  bqUpdateSourceTypeAction,
+} from './core/bq.action';
 import { $TIME_WIDTH } from './core/data';
 
 export function stateConnector(state) {
   return {
     startTime: _.get(state, 'bq.timeWindow.start', null),
     endTime: _.get(state, 'bq.timeWindow.end', null),
+    sourceType: _.get(state, 'bq.type', 'raspi'),
   };
 }
 
@@ -22,6 +29,12 @@ export function dispatchConnector(dispatch) {
   return {
     dispatchUpdateTimeWindow: (start, end, callback) => {
       dispatch(bqUpdateTimeWindowAction(start, end, callback));
+    },
+    dispatchUpdateSourceType: (type, callback) => {
+      dispatch(bqUpdateSourceTypeAction(type, callback));
+    },
+    dispatchLoadSrcMacAddresses: (start, end, callback) => {
+      dispatch(bqLoadSrcMacAddressesAction(start, end, callback));
     }
   };
 }
@@ -30,13 +43,18 @@ export class TimeWindow extends React.Component {
   static propTypes = {
     startTime: PropTypes.number,
     endTime: PropTypes.number,
+    sourceType: PropTypes.string,
     onChange: PropTypes.func,
+    dispatchLoadSrcMacAddresses: PropTypes.func,
+    dispatchUpdateTimeWindow: PropTypes.func,
+    dispatchUpdateSourceType: PropTypes.func,
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
+      type: props.sourceType,
       start: props.startTime,
       end: props.endTime,
     };
@@ -77,18 +95,21 @@ export class TimeWindow extends React.Component {
       })();
       if (start && end && start < end) {
         this.setState({ start, end });
+        // this.props.dispatchLoadSrcMacAddresses(start, end);
       } else {
         logger.error("Invalid time window");
       }
     }).bind(this);
   }
 
-  handleUpdateTimeWindow() {
-    const { start, end } = this.state;
-    this.props.dispatchUpdateTimeWindow(start, end, this.handleUpdatedTimeWindow.bind(this));
+  handleChangeType(event, key, value) {
+    this.setState({ type: value });
   }
 
-  handleUpdatedTimeWindow(win) {
+  handleUpdateTimeWindow() {
+    const { start, end, type } = this.state;
+    this.props.dispatchUpdateTimeWindow(start, end);
+    this.props.dispatchUpdateSourceType(type);
   }
 
   render() {
@@ -142,3 +163,14 @@ export class TimeWindow extends React.Component {
 }
 
 export default connect(stateConnector, dispatchConnector)(TimeWindow);
+
+/*
+        <SelectField
+           name="macType"
+           value={ this.state.type }
+           onChange={ this.handleChangeType.bind(this) }>
+          <MenuItem value={ "raspi" } primaryText={ "Raspi" } />
+          <MenuItem value={ "src" } primaryText={ "Src" } />
+        </SelectField>
+
+*/

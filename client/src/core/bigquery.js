@@ -12,7 +12,7 @@ import { buildSQL } from './queries';
  */
 export function runQuery(query, ...args) {
   return new Promise((resolve, reject) => {
-    query = buildSQL(query, args);
+    query = buildSQL(query, ...args);
     bqRunQuery(query, (response) => {
       logger.debug(response)
       if (response.jobComplete) {
