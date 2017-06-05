@@ -1,0 +1,28 @@
+
+.heatmap {
+  position: absolute;
+  background: url('img/office.svg');
+  background-repeat: no-repeat;
+  // background-position: center;
+  background-size: contain;
+  background-color: white;
+}
+
+.box {
+  display: flex;
+  flex-direction: row;
+  transform: translateY(-50%);
+  top: 50%;
+  position: relative;
+  .box-left {
+    flex: 1;
+    padding-left: 4vw;
+  }
+  .box-center {
+    flex: 9;
+  }
+  .box-right {
+    flex: 1;
+    padding-right: 4vw;
+  }
+}

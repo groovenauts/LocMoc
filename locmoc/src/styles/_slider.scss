@@ -1,0 +1,17 @@
+
+.slider-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+  color: white;
+  transform: translateY(-200%);
+  cursor: none;
+  pointer-events: none;    
+  .item {
+    flex: 1;
+    &.is-disable {
+      opacity: 0.5;
+    }
+  }
+}

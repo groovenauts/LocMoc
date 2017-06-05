@@ -1,0 +1,70 @@
+{
+  "width": 46300,
+  "height": 17000,
+  "rooms": [
+    {
+      "roomNumber": 0,
+      "label": "外",
+      "center": {
+        "x": null,
+        "y": null
+      }
+    },
+    {
+      "roomNumber": 1,
+      "label": "M&D Lab",
+      "leftTop": {
+        "x": 21820,
+        "y": 3380
+      },
+      "rightBottom": {
+        "x": 31480,
+        "y": 10595
+      }
+    },
+    {
+      "roomNumber": 2,
+      "label": "Sputnik",
+      "leftTop": {
+        "x": 15000,
+        "y": 5650
+      },
+      "rightBottom": {
+        "x": 20220,
+        "y": 9150
+      }
+    },
+    {
+      "roomNumber": 3,
+      "label": "Apollo",
+      "leftTop": {
+        "x": 14950,
+        "y": 2200
+      },
+      "rightBottom": {
+        "x": 20220,
+        "y": 3670
+      }
+    },
+    {
+      "roomNumber": 4,
+      "label": "オフィス",
+      "leftTop": {
+        "x": 0,
+        "y": 0
+      },
+      "rightBottom": {
+        "x": 14950,
+        "y": 17000
+      }
+    },
+    {
+      "roomNumber": 5,
+      "label": "廊下",
+      "center": {
+        "x": 26650,
+        "y": 10885
+      }
+    }
+ ]
+}

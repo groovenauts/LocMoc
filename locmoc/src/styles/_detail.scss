@@ -1,0 +1,60 @@
+
+#detail {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+
+  > .main {
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+    padding: 0px 3vw;
+    background: $blueA200;
+
+    > .header {
+      height: 10vh;
+      > .header-navi {
+        float: left;
+        transform: translateY(-50%);
+        top: 50%;
+        position: relative;
+        color: white;
+        cursor: default;
+        // padding: 4px 6px 4px 0px;
+        // border-radius: 2px;
+
+        > span {
+          font-size: 2.5vh;
+          vertical-align: -webkit-baseline-middle;
+        }
+        > i {
+          font-size: 60px;
+          vertical-align: middle;
+          font-weight: 100;
+        }
+        &:hover {
+          cursor: pointer;
+          color: $blue50;
+          // background-color: $blueA400;
+        }
+      }
+    }
+    > .content {
+      display: flex;
+      flex-direction: row;
+      flex: 3;
+      min-height: 80vh;
+    }
+    > .footer {
+      height: 10vh;
+    }
+  }
+  > .sub {
+    background: white;
+    padding: 20px 3vw;
+    flex: 1;
+    > .content {
+      padding: 20px 3vw;
+    }
+  }
+}

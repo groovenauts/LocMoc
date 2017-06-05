@@ -1,0 +1,10 @@
+service: locmoc
+runtime: nodejs
+api_version: 1
+env: flex
+env_variables:
+  BASIC_USER: 
+  BASIC_PASSWORD: 
+instance_class: F1
+automatic_scaling:
+  min_idle_instances: 0

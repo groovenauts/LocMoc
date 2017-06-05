@@ -1,0 +1,68 @@
+
+.summary {
+  width: 100%;
+  height: 100%;
+  background-color: $blueA200;
+  font-size: 18px;
+  font-weight: 100;
+
+  table {
+    width: 100%;
+    height: 100vh;
+    display: block;
+    table-layout: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: white;
+    border-spacing: 0px;
+    display: block;
+    overflow-y: scroll;
+
+    > tbody {
+      width: 100%;
+      display: inline-table;
+      > tr {
+        cursor: pointer;
+        > td {
+          border-bottom: 0.5px solid white;
+          padding-left: 0.5vw;
+          padding-right: 0.5vw;
+          cursor: default;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          &.title {
+            font-size: 1.4vw;
+          }
+          &.chart {
+            width: 24vw;
+            padding-left: 1vw;
+            padding-right: 1vw;
+          }
+          &.time, &.sub, &.speaker {
+            font-size: 1vw;
+            font-weight: 100;
+          }
+          > i {
+            font-size: 2vw;
+          }
+        }
+        > td:first-child {
+          padding-left: 3vw;
+        }
+        > td:last-child {
+          padding-right: 1vw;
+        }
+        &:hover {
+          background-color: $blueA400;
+        }
+      }
+      > tr:last-child {
+        > td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
